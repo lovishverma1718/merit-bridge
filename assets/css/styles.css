@@ -149,37 +149,31 @@ p:last-child { margin-bottom: 0; }
 /* ---------- Logo (recreated from brand mark) ---------- */
 .logo { position: relative; display: inline-flex; flex-direction: column; align-items: flex-start; padding-top: 15px; line-height: 1; color: var(--logo-ink, var(--navy)); }
 .logo-arc { position: absolute; top: 0; left: 34%; width: 62%; height: auto; overflow: visible; }
-.logo-arc .crescent { fill: currentColor; }
-.logo-arc .swoosh { fill: none; stroke: var(--logo-accent, var(--teal)); stroke-width: 2.2; stroke-linecap: round; }
-.logo-word { font-family: var(--display); font-weight: 600; font-size: 27px; letter-spacing: -.035em; white-space: nowrap; }
-.logo-sub { font-family: var(--display); font-weight: 500; font-size: 9.6px; letter-spacing: .3em; text-transform: uppercase; margin-top: 5px; padding-left: 30%; position: relative; white-space: nowrap; }
-.logo-sub::after { content: ""; position: absolute; left: 30%; right: .34em; bottom: -6px; height: 1.5px; background: var(--logo-accent, var(--teal)); border-radius: 2px; }
+.logo-arc .crescent { fill: url(#mbArcGrad); }
+.logo-arc .swoosh { fill: none; stroke: var(--teal); stroke-width: 2.4; stroke-linecap: round; }
+.logo-word { font-family: var(--display); font-weight: 700; font-size: 27px; letter-spacing: -.035em; white-space: nowrap; }
+.logo-sub { font-family: var(--display); font-weight: 600; font-size: 9.6px; letter-spacing: .3em; text-transform: uppercase; color: var(--teal); margin-top: 6px; padding-left: 30%; position: relative; white-space: nowrap; }
 .logo--lg .logo-word { font-size: 40px; }
 .logo--lg .logo-sub { font-size: 13px; }
 
 /* ---------- Header ---------- */
 .site-header {
   position: fixed; inset: 0 0 auto; z-index: 60;
-  --logo-ink: #fff; --logo-accent: var(--cyan); color: #fff;
-  border-bottom: 1px solid transparent;
+  --logo-ink: var(--navy); color: var(--navy);
+  background: #fff;
+  border-bottom: 1px solid var(--line);
   transition: background .45s var(--ease), color .45s, border-color .45s;
 }
 .site-header.is-scrolled {
-  background: rgba(255, 255, 255, .96);
-  border-bottom-color: var(--line);
-  color: var(--navy); --logo-ink: var(--navy); --logo-accent: var(--teal);
+  box-shadow: 0 10px 30px -20px rgba(6,26,48,.35);
 }
 .nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: var(--header-h); transition: height .45s var(--ease); }
 .is-scrolled .nav { height: 74px; }
 
-.nav-links { display: flex; gap: 2px; list-style: none; margin: 0; padding: 5px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.06); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: border-color .45s, background .45s; }
-.nav-links a { display: block; padding: 10px 18px; border-radius: 999px; font-family: var(--display); font-size: 15px; font-weight: 500; color: rgba(255,255,255,.78); transition: color .3s, background .3s; }
-.nav-links a:hover { color: #fff; background: rgba(255,255,255,.08); }
-.nav-links a[aria-current="page"] { background: #fff; color: var(--navy); }
-.is-scrolled .nav-links { border-color: var(--line); background: var(--bg); }
-.is-scrolled .nav-links a { color: var(--muted); }
-.is-scrolled .nav-links a:hover { color: var(--navy); background: rgba(11,42,74,.05); }
-.is-scrolled .nav-links a[aria-current="page"] { background: var(--navy); color: #fff; }
+.nav-links { display: flex; gap: 2px; list-style: none; margin: 0; padding: 5px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); }
+.nav-links a { display: block; padding: 10px 18px; border-radius: 999px; font-family: var(--display); font-size: 15px; font-weight: 500; color: var(--muted); transition: color .3s, background .3s; }
+.nav-links a:hover { color: var(--navy); background: rgba(11,42,74,.05); }
+.nav-links a[aria-current="page"] { background: var(--navy); color: #fff; }
 
 .nav-right { display: flex; align-items: center; gap: 20px; }
 .nav-phone { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 500; font-size: 15px; opacity: .9; transition: opacity .3s; }
@@ -188,8 +182,7 @@ p:last-child { margin-bottom: 0; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(52,211,153,.55); } 70% { box-shadow: 0 0 0 9px rgba(52,211,153,0); } 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); } }
 .site-header .btn--sm { --bg: var(--teal); --dot: rgba(255,255,255,.2); }
 
-.menu-toggle { display: none; width: 50px; height: 50px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); background: rgba(255,255,255,.06); cursor: pointer; position: relative; color: inherit; }
-.is-scrolled .menu-toggle { border-color: var(--line-strong); background: transparent; }
+.menu-toggle { display: none; width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--line-strong); background: transparent; cursor: pointer; position: relative; color: inherit; }
 .menu-toggle span { position: absolute; left: 15px; right: 15px; height: 1.6px; background: currentColor; transition: transform .5s var(--ease), top .5s var(--ease); }
 .menu-toggle span:nth-child(1) { top: 20px; }
 .menu-toggle span:nth-child(2) { top: 28px; }
@@ -211,7 +204,6 @@ p:last-child { margin-bottom: 0; }
 .mobile-menu li a[aria-current="page"] { color: var(--cyan); }
 .mobile-menu-foot { display: grid; gap: 6px; font-size: 15px; color: rgba(255,255,255,.7); }
 .menu-open { overflow: hidden; }
-.menu-open .site-header { color: #fff; background: transparent; border-color: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; --logo-ink: #fff; --logo-accent: var(--cyan); }
 
 @media (max-width: 1180px) { .nav-phone { display: none; } }
 @media (max-width: 1000px) { .nav-links, .nav-right .btn { display: none; } .menu-toggle { display: block; } }
@@ -271,7 +263,6 @@ p:last-child { margin-bottom: 0; }
 .hero-trust strong { display: block; color: #fff; font-family: var(--display); font-weight: 500; font-size: 16px; }
 .hero-trust .ico { width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); display: grid; place-items: center; flex: none; color: var(--cyan); }
 .hero-trust .ico svg { width: 20px; height: 20px; }
-.hero-trust .ico.maple { color: #E2483D; background: rgba(255,255,255,.95); border-color: transparent; }
 
 /* ---------- Marquee ---------- */
 .marquee { background: var(--teal); color: #fff; padding: 22px 0; overflow: hidden; }
@@ -341,7 +332,7 @@ p:last-child { margin-bottom: 0; }
 .step h3 { margin-top: auto; padding-top: 48px; }
 .step p { margin-top: 12px; color: var(--muted); font-size: 15.5px; }
 
-/* ---------- Photo band (Canada) ---------- */
+/* ---------- Photo band ---------- */
 .band { position: relative; overflow: hidden; color: #fff; background: var(--navy-900); padding: clamp(110px, 14vw, 200px) 0 clamp(64px, 7vw, 96px); }
 .band-media { position: absolute; inset: 0; }
 .band-media img { width: 100%; height: 100%; object-fit: cover; }
@@ -501,9 +492,7 @@ p:last-child { margin-bottom: 0; }
 .reason-ico { width: 56px; height: 56px; border-radius: 16px; background: var(--bg-2); color: var(--teal); display: grid; place-items: center; margin-bottom: 18px; transition: background .4s, color .4s; }
 .reason:hover .reason-ico { background: var(--teal); color: #fff; }
 .reason-ico svg { width: 25px; height: 25px; }
-.reason-ico.maple { color: #E2483D; }
-.reason:hover .reason-ico.maple { background: #E2483D; color: #fff; }
-.reason p { color: var(--muted); font-size: 15.5px; margin: 0; }
+.reason:hover .reason p { color: var(--muted); font-size: 15.5px; margin: 0; }
 
 .compare-scroll { overflow-x: auto; border-radius: var(--radius); border: 1px solid rgba(255,255,255,.14); }
 .compare { width: 100%; border-collapse: collapse; font-size: 15.5px; min-width: 760px; }
@@ -587,18 +576,20 @@ a.info-row:hover { color: var(--cyan); }
 .next-step p { color: var(--muted); font-size: 15.5px; }
 
 /* ---------- Footer ---------- */
-.site-footer { background: var(--navy-950); color: #fff; padding-top: clamp(72px, 9vw, 120px); --logo-ink: #fff; --logo-accent: var(--cyan); }
+.site-footer { background: var(--navy-950); color: #fff; padding-top: clamp(72px, 9vw, 120px); }
+.footer-brand .brand { display: inline-flex; background: #fff; padding: 16px 22px 14px; border-radius: 18px; --logo-ink: var(--navy); }
 .footer-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: clamp(40px, 6vw, 96px); padding-bottom: clamp(56px, 7vw, 88px); }
 .footer-brand p { color: rgba(255,255,255,.62); max-width: 38ch; margin-top: 30px; font-size: 15.5px; }
 .badge-ca { display: inline-flex; align-items: center; gap: 12px; margin-top: 28px; padding: 10px 18px 10px 10px; border-radius: 999px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); font-size: 14px; font-weight: 500; }
-.badge-ca span { width: 30px; height: 30px; border-radius: 50%; background: #fff; display: grid; place-items: center; }
-.badge-ca svg { width: 16px; height: 16px; color: #E2483D; }
-.footer-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.badge-ca span { width: 30px; height: 30px; border-radius: 50%; background: var(--teal); display: grid; place-items: center; }
+.badge-ca svg { width: 16px; height: 16px; color: #fff; }
+.footer-cols { display: grid; grid-template-columns: .8fr 1fr 1.3fr; gap: 32px; }
 .footer-cols h4 { font-family: var(--display); font-weight: 600; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--cyan); margin: 0 0 22px; }
 .footer-cols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; font-size: 15.5px; color: rgba(255,255,255,.78); }
 .footer-cols a { transition: color .3s; }
 .footer-cols a:hover { color: #fff; }
-.footer-cols .contact-list a { overflow-wrap: anywhere; }
+.footer-cols .contact-list a { white-space: nowrap; }
+@media (max-width: 380px) { .footer-cols .contact-list a { white-space: normal; overflow-wrap: anywhere; } }
 .footer-cta { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px; padding: 36px 0; border-top: 1px solid rgba(255,255,255,.1); }
 .footer-cta h3 { font-family: var(--display); font-weight: 500; font-size: clamp(1.6rem, 3vw, 2.4rem); letter-spacing: -.03em; margin: 0; }
 .footer-cta h3 em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--cyan); }

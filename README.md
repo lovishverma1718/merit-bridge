@@ -1,6 +1,6 @@
 # Merit Bridge Solutions Inc. — Website
 
-Five-page static marketing website for Merit Bridge Solutions Inc., a Canadian business process outsourcing company.
+Five-page static marketing website for Merit Bridge Solutions Inc., a business process outsourcing company.
 
 ## Pages
 

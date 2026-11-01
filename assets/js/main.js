@@ -116,14 +116,14 @@
     }, 3200);
   }
 
-  /* Live clock (Central Time — Manitoba) */
+  /* Live clock (visitor's local time) */
   var clock = document.querySelector("[data-clock]");
   if (clock) {
     var tick = function () {
       try {
-        clock.textContent = new Date().toLocaleTimeString("en-CA", {
-          hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "America/Winnipeg"
-        }) + " CT";
+        clock.textContent = new Date().toLocaleTimeString([], {
+          hour: "2-digit", minute: "2-digit", hour12: false
+        });
       } catch (e) {
         clock.textContent = "";
       }
