@@ -758,3 +758,8 @@ a.info-row:hover { color: var(--cyan); }
   .menu-toggle span:nth-child(2) { top: 23px; }
   .menu-open .menu-toggle span:nth-child(1), .menu-open .menu-toggle span:nth-child(2) { top: 19.5px; }
 }
+.form-error-btn { display: flex; width: fit-content; margin-top: 16px; text-decoration: none !important; }
+@media (max-width: 760px) { .form-error-btn { width: 100%; justify-content: space-between; } }
+.form-activate { display: none; grid-column: 1 / -1; padding: 18px 20px; border-radius: 14px; background: rgba(60,201,214,.12); border: 1px solid rgba(14,140,155,.3); color: var(--navy); font-size: 15px; }
+.form-activate.show { display: block; }
+.form-activate a { text-decoration: underline; font-weight: 600; }

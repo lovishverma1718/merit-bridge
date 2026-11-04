@@ -160,7 +160,12 @@
     });
   }
 
-  /* Contact form → sent by FormSubmit straight to the team inbox (no account or hosting setup) */
+  /* Contact form → emailed straight to the team.
+     Primary: Web3Forms (set WEB3FORMS_KEY). Backup: FormSubmit.
+     If every service is unreachable, the visitor can send it from their own email app. */
+  var WEB3FORMS_KEY = "";
+  var TEAM_EMAIL = "admin@meritbridgesolution.com";
+
   var form = document.querySelector("[data-contact-form]");
   if (form) {
     var params = new URLSearchParams(window.location.search);
@@ -171,15 +176,35 @@
     }
     var successBox = form.querySelector(".form-success");
     var errorBox = form.querySelector(".form-error");
+    var mailtoBtn = form.querySelector("[data-mailto]");
     var submitBtn = form.querySelector("[data-submit]");
-    var showResult = function (sent) {
+    var activateBox = form.querySelector(".form-activate");
+    var showResult = function (sent, activation) {
       if (successBox) successBox.classList.toggle("show", sent);
-      if (errorBox) errorBox.classList.toggle("show", !sent);
-      var box = sent ? successBox : errorBox;
+      if (errorBox) errorBox.classList.toggle("show", !sent && !activation);
+      if (activateBox) activateBox.classList.toggle("show", !!activation);
+      var box = sent ? successBox : activation ? activateBox : errorBox;
       if (box) { box.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" }); if (sent) box.focus({ preventScroll: true }); }
     };
-    // Non-JS fallback: FormSubmit redirects back here with ?sent=1
+    // Non-JS fallback: the form service redirects back here with ?sent=1
     if (params.get("sent") === "1") showResult(true);
+
+    var postJSON = function (url, body) {
+      var ctrl = "AbortController" in window ? new AbortController() : null;
+      var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 15000) : null;
+      return fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(body),
+        signal: ctrl ? ctrl.signal : undefined
+      }).then(function (res) {
+        return res.json().then(function (json) {
+          // FormSubmit's very first submission only triggers a one-time "Activate Form" email
+          if (/activat/i.test(json.message || "")) { var a = new Error("activation"); a.activation = true; throw a; }
+          if (!res.ok || String(json.success) !== "true") throw new Error(json.message || "Request failed");
+        });
+      }).finally(function () { if (timer) clearTimeout(timer); });
+    };
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -195,40 +220,60 @@
         if (first) first.focus();
         return;
       }
+      if (form.elements["_honey"].value) return; // spam bot
+
       var val = function (n) { return form.elements[n].value.trim(); };
       var services = Array.prototype.map.call(form.querySelectorAll('input[name="services"]:checked'), function (c) { return c.value; });
-      // Field names become the row labels in the email FormSubmit sends
-      var payload = {
+      var subject = "New consultation request — " + (val("company") || val("name"));
+      // These labels become the rows of the email the team receives
+      var details = {
         "Name": val("name"),
         "Company": val("company") || "—",
         "Email": val("email"),
         "Phone": val("phone") || "—",
         "Services of interest": services.join(", ") || "Not sure yet",
         "Expected monthly volume": val("volume"),
-        "Message": val("message"),
-        _replyto: val("email"),
-        _subject: "New consultation request — " + (val("company") || val("name")),
-        _template: "table",
-        _captcha: "false",
-        _honey: val("_honey")
+        "Message": val("message")
       };
+      var withExtras = function (extras) {
+        var o = {}; Object.keys(details).forEach(function (k) { o[k] = details[k]; });
+        Object.keys(extras).forEach(function (k) { o[k] = extras[k]; });
+        return o;
+      };
+
+      // Pre-fill the "email it instead" button in case every service is down
+      if (mailtoBtn) {
+        var lines = Object.keys(details).map(function (k) { return k + ": " + details[k]; });
+        mailtoBtn.href = "mailto:" + TEAM_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines.join("\n"));
+      }
+
+      var attempts = [];
+      if (WEB3FORMS_KEY) {
+        attempts.push(function () {
+          return postJSON("https://api.web3forms.com/submit", withExtras({
+            access_key: WEB3FORMS_KEY, subject: subject, from_name: "Merit Bridge website", replyto: val("email")
+          }));
+        });
+      }
+      attempts.push(function () {
+        return postJSON("https://formsubmit.co/ajax/" + TEAM_EMAIL, withExtras({
+          _replyto: val("email"), _subject: subject, _template: "table", _captcha: "false"
+        }));
+      });
 
       if (submitBtn) { submitBtn.disabled = true; submitBtn.firstChild.textContent = "Sending… "; }
       if (errorBox) errorBox.classList.remove("show");
 
-      fetch(form.action.replace("formsubmit.co/", "formsubmit.co/ajax/"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify(payload)
-      }).then(function (res) {
-        return res.json().then(function (json) {
-          if (!res.ok || String(json.success) !== "true") throw new Error(json.message || "Request failed");
-        });
-      }).then(function () {
+      var activationPending = false;
+      var chain = Promise.reject();
+      attempts.forEach(function (attempt) {
+        chain = chain.catch(function (err) { if (err && err.activation) activationPending = true; return attempt(); });
+      });
+      chain.then(function () {
         form.reset();
         showResult(true);
-      }).catch(function () {
-        showResult(false);
+      }).catch(function (err) {
+        showResult(false, activationPending || (err && err.activation));
       }).then(function () {
         if (submitBtn) { submitBtn.disabled = false; submitBtn.firstChild.textContent = "Send request "; }
       });
