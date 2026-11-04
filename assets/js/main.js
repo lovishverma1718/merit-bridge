@@ -160,7 +160,7 @@
     });
   }
 
-  /* Contact form → opens the visitor's email client with a pre-filled message */
+  /* Contact form → sent by FormSubmit straight to the team inbox (no account or hosting setup) */
   var form = document.querySelector("[data-contact-form]");
   if (form) {
     var params = new URLSearchParams(window.location.search);
@@ -169,6 +169,17 @@
       var box = form.querySelector('input[name="services"][value="' + preset.replace(/"/g, "") + '"]');
       if (box) box.checked = true;
     }
+    var successBox = form.querySelector(".form-success");
+    var errorBox = form.querySelector(".form-error");
+    var submitBtn = form.querySelector("[data-submit]");
+    var showResult = function (sent) {
+      if (successBox) successBox.classList.toggle("show", sent);
+      if (errorBox) errorBox.classList.toggle("show", !sent);
+      var box = sent ? successBox : errorBox;
+      if (box) { box.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" }); if (sent) box.focus({ preventScroll: true }); }
+    };
+    // Non-JS fallback: FormSubmit redirects back here with ?sent=1
+    if (params.get("sent") === "1") showResult(true);
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -184,22 +195,43 @@
         if (first) first.focus();
         return;
       }
-      var get = function (n) { var el = form.elements[n]; return el ? el.value.trim() : ""; };
+      var val = function (n) { return form.elements[n].value.trim(); };
       var services = Array.prototype.map.call(form.querySelectorAll('input[name="services"]:checked'), function (c) { return c.value; });
-      var body = [
-        "Name: " + get("name"),
-        "Company: " + get("company"),
-        "Email: " + get("email"),
-        "Phone: " + get("phone"),
-        "Services of interest: " + (services.join(", ") || "Not sure yet"),
-        "Expected volume: " + get("volume"),
-        "",
-        get("message")
-      ].join("\n");
-      var subject = "Consultation request — " + (get("company") || get("name"));
-      window.location.href = "mailto:admin@meritbridgesolution.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-      var success = form.querySelector(".form-success");
-      if (success) success.classList.add("show");
+      // Field names become the row labels in the email FormSubmit sends
+      var payload = {
+        "Name": val("name"),
+        "Company": val("company") || "—",
+        "Email": val("email"),
+        "Phone": val("phone") || "—",
+        "Services of interest": services.join(", ") || "Not sure yet",
+        "Expected monthly volume": val("volume"),
+        "Message": val("message"),
+        _replyto: val("email"),
+        _subject: "New consultation request — " + (val("company") || val("name")),
+        _template: "table",
+        _captcha: "false",
+        _honey: val("_honey")
+      };
+
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.firstChild.textContent = "Sending… "; }
+      if (errorBox) errorBox.classList.remove("show");
+
+      fetch(form.action.replace("formsubmit.co/", "formsubmit.co/ajax/"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(payload)
+      }).then(function (res) {
+        return res.json().then(function (json) {
+          if (!res.ok || String(json.success) !== "true") throw new Error(json.message || "Request failed");
+        });
+      }).then(function () {
+        form.reset();
+        showResult(true);
+      }).catch(function () {
+        showResult(false);
+      }).then(function () {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.firstChild.textContent = "Send request "; }
+      });
     });
 
     form.querySelectorAll("input, select, textarea").forEach(function (input) {

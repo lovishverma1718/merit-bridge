@@ -669,3 +669,92 @@ a.info-row:hover { color: var(--cyan); }
   .js .img-reveal { opacity: 1; transform: none; }
   .marquee-track { animation: none; }
 }
+
+/* ---------- Form states ---------- */
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.form-success { border: 1px solid rgba(14,140,155,.3); }
+.form-success:focus { outline: none; }
+.form-error { display: none; grid-column: 1 / -1; padding: 18px 20px; border-radius: 14px; background: rgba(192,57,43,.08); border: 1px solid rgba(192,57,43,.25); color: #8E2A1F; font-size: 15px; }
+.form-error.show { display: block; }
+.form-error a { text-decoration: underline; font-weight: 600; }
+.btn:disabled { opacity: .7; cursor: progress; }
+
+/* ---------- Mobile request buttons ---------- */
+.nav-cta-mobile { display: none; align-items: center; height: 44px; padding: 0 18px; border-radius: 999px; background: var(--teal); color: #fff; font-family: var(--display); font-weight: 600; font-size: 14.5px; white-space: nowrap; }
+.mobile-menu-cta { justify-content: space-between; margin: 28px 0; }
+.mobile-bar { display: none; }
+
+@media (max-width: 1000px) {
+  .nav-cta-mobile { display: inline-flex; }
+  .nav-right { gap: 10px; }
+}
+
+@media (max-width: 760px) {
+  :root { --header-h: 72px; }
+  .is-scrolled .nav { height: 66px; }
+  .svc-nav { top: 66px; }
+  .menu-toggle { width: 44px; height: 44px; }
+  .menu-toggle span { left: 13px; right: 13px; }
+  .menu-toggle span:nth-child(1) { top: 18px; }
+  .menu-toggle span:nth-child(2) { top: 25px; }
+  .menu-open .menu-toggle span:nth-child(1), .menu-open .menu-toggle span:nth-child(2) { top: 21.5px; }
+
+  /* Sticky bottom action bar */
+  .mobile-bar {
+    display: grid; grid-template-columns: auto 1fr; gap: 10px;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 58;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(255,255,255,.97); border-top: 1px solid var(--line);
+    box-shadow: 0 -10px 30px -18px rgba(6,26,48,.35);
+  }
+  .mobile-bar a { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 50px; border-radius: 999px; font-family: var(--display); font-weight: 600; font-size: 15.5px; }
+  .mobile-bar svg { width: 18px; height: 18px; }
+  .mobile-bar-call { padding: 0 20px; border: 1px solid var(--line-strong); color: var(--navy); }
+  .mobile-bar-call svg .acc { stroke: var(--teal); }
+  .mobile-bar-request { background: var(--teal); color: #fff; }
+  .mobile-bar-request svg { width: 15px; height: 15px; }
+  body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+  .menu-open .mobile-bar { display: none; }
+
+  /* Tighter rhythm on phones */
+  .section { padding: 72px 0; }
+  .section--tight { padding: 56px 0; }
+  .section-head { margin-bottom: 40px; gap: 20px; }
+  .display { font-size: clamp(2.5rem, 11vw, 3.4rem); }
+  .page-hero .display { font-size: clamp(2.3rem, 10vw, 3.1rem); }
+  .h2 { font-size: clamp(1.95rem, 8.4vw, 2.5rem); }
+  .lead { font-size: 1.04rem; }
+  .page-hero { padding: calc(var(--header-h) + 52px) 0 56px; }
+  .page-hero-meta { margin-top: 40px; }
+  .hero-inner { padding-top: calc(var(--header-h) + 44px); }
+  .hero-actions { margin-top: 32px; }
+  .hero-trust { margin-top: 44px; }
+  .band { padding: 88px 0 56px; }
+  .cta { padding: 44px 22px; }
+  .cta .h2 { font-size: clamp(2rem, 9vw, 2.6rem); }
+  .cta-contact { flex-direction: column; gap: 16px; }
+  .svc-detail { padding: 56px 0; gap: 28px; }
+  .svc-nav a { padding: 9px 14px; font-size: 14px; }
+  .form-card { padding: 26px 20px; border-radius: 22px; }
+  .form-foot { flex-direction: column-reverse; align-items: stretch; }
+  .form-foot .btn { justify-content: space-between; }
+  .footer-cta { flex-direction: column; align-items: flex-start; }
+  .footer-cta .btn { width: 100%; justify-content: space-between; }
+  .footer-bottom { flex-direction: column; gap: 8px; }
+  .faq summary { padding: 18px; font-size: 1.02rem; }
+  .faq .answer { padding: 0 18px 20px; }
+  .model { padding: 30px 24px; }
+  .model-tag { top: 22px; right: 22px; }
+  .compare th, .compare td { padding: 16px 18px; }
+}
+
+@media (max-width: 400px) {
+  .logo-word { font-size: 21px; }
+  .logo-sub { font-size: 7.6px; }
+  .nav-cta-mobile { padding: 0 14px; font-size: 13.5px; height: 40px; }
+  .menu-toggle { width: 40px; height: 40px; }
+  .menu-toggle span { left: 11px; right: 11px; }
+  .menu-toggle span:nth-child(1) { top: 16px; }
+  .menu-toggle span:nth-child(2) { top: 23px; }
+  .menu-open .menu-toggle span:nth-child(1), .menu-open .menu-toggle span:nth-child(2) { top: 19.5px; }
+}
